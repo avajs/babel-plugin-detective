@@ -1,0 +1,38 @@
+{
+  "name": "babel-plugin-detective",
+  "version": "0.0.0",
+  "description": "A Babel 6 plugin that scans the AST for require calls and import statements",
+  "license": "MIT",
+  "repository": "jamestalmage/babel-plugin-detective",
+  "author": {
+    "name": "James Talmage",
+    "email": "james@talmage.io",
+    "url": "github.com/jamestalmage"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "xo && nyc mocha"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "babel-plugin",
+    "detective",
+    "require",
+    "import",
+    "dependencies",
+    "scan",
+    "traverse"
+  ],
+  "devDependencies": {
+    "babel-core": "^6.1.21",
+    "babel-preset-es2015": "^6.1.18",
+    "babel-preset-stage-3": "^6.1.18",
+    "babylon": "^6.1.21",
+    "mocha": "^2.3.3",
+    "nyc": "^3.2.2"
+  }
+}
