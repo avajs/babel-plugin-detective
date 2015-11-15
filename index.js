@@ -48,8 +48,18 @@ function requireMetadata(state) {
 
 function addExpression(state, node) {
 	var loc = {start: node.start, end: node.end};
+	if (node.loc) {
+		loc.loc = {
+			start: copyLoc(node.loc.start),
+			end: copyLoc(node.loc.end)
+		};
+	}
 	requireMetadata(state).expressions.push(loc);
 	return loc;
+}
+
+function copyLoc(loc) {
+	return loc && {line: loc.line, column: loc.column};
 }
 
 function addString(state, string) {

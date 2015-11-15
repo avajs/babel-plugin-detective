@@ -42,7 +42,20 @@ function metadata(parseResult, replaceExp) {
 it('produces a list of expressions', () => {
 	assert.deepEqual(metadata(parseFixture('fixture.js')), {
 		strings: ['b', 'foo'],
-		expressions: [{start: 60, end: 73}]
+		expressions: [{
+			start: 60,
+			end: 73,
+			loc: {
+				start: {
+					line: 7,
+					column: 8
+				},
+				end: {
+					line: 7,
+					column: 21
+				}
+			}
+		}]
 	});
 });
 
@@ -94,7 +107,21 @@ it('attachExpressionSource option will automatically attach expression source', 
 
 	assert.deepEqual(metadata(parseResult), {
 		strings: ['b', 'foo'],
-		expressions: [{start: 60, end: 73, code: `'foo' + 'bar'`}]
+		expressions: [{
+			start: 60,
+			end: 73,
+			code: `'foo' + 'bar'`,
+			loc: {
+				start: {
+					line: 7,
+					column: 8
+				},
+				end: {
+					line: 7,
+					column: 21
+				}
+			}
+		}]
 	});
 });
 
