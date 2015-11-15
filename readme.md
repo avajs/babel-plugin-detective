@@ -118,6 +118,11 @@ Attach the actual expression code to each member of `requires.expressions`.
  ]
 ```
 
+## Related
+
+- [`node-detective`](https://github.com/substack/node-detective) Inspiration for this module. Used by browserify
+  to analyze module dependencies.
+
 ## License
 
 MIT © [James Talmage](http://github.com/jamestalmage)
