@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-detective",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A Babel 6 plugin that scans the AST for require calls and import statements",
   "license": "MIT",
   "repository": "jamestalmage/babel-plugin-detective",
