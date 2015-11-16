@@ -19,7 +19,7 @@ function parseFixture(fixtureFile, position, opts) {
 
 describe('mocha-5', function () {
 	it('produces a list of expressions', () => {
-		var parseResult = parseFixture('fixture.js');
+		const parseResult = parseFixture('fixture.js');
 		assert.deepEqual(metadata(parseResult), {
 			strings: ['b', 'foo'],
 			expressions: [{
@@ -44,7 +44,7 @@ describe('mocha-5', function () {
 	});
 
 	it('before builtin plugins', () => {
-		var parseResult = parseFixture('fixture.js', 'before');
+		const parseResult = parseFixture('fixture.js', 'before');
 		assert.deepEqual(metadata(parseResult), {
 			strings: ['b', 'foo'],
 			expressions: [{
@@ -69,7 +69,7 @@ describe('mocha-5', function () {
 	});
 
 	it('after builtin plugins', () => {
-		var parseResult = parseFixture('fixture.js', 'after');
+		const parseResult = parseFixture('fixture.js', 'after');
 		assert.deepEqual(metadata(parseResult), {
 			strings: ['b', 'foo'],
 			expressions: [{
@@ -94,7 +94,7 @@ describe('mocha-5', function () {
 	});
 
 	it('alternate word', () => {
-		var parseResult = parseFixture('fixture.js', 'before', {word: '__dereq__'});
+		const parseResult = parseFixture('fixture.js', 'before', {word: '__dereq__'});
 		assert.deepEqual(metadata(parseResult), {
 			strings: ['b', 'baz'],
 			expressions: []
@@ -102,7 +102,7 @@ describe('mocha-5', function () {
 	});
 
 	it('imports can be excluded', () => {
-		var parseResult = parseFixture('fixture.js', 'before', {import: false});
+		const parseResult = parseFixture('fixture.js', 'before', {import: false});
 		assert.deepEqual(metadata(parseResult, true), {
 			strings: ['foo'],
 			expressions: [`'foo' + 'bar'`]
@@ -110,7 +110,7 @@ describe('mocha-5', function () {
 	});
 
 	it('require statements can be excluded', () => {
-		var parseResult = parseFixture('fixture.js', 'before', {require: false});
+		const parseResult = parseFixture('fixture.js', 'before', {require: false});
 
 		assert.deepEqual(metadata(parseResult), {
 			strings: ['b'],
@@ -119,7 +119,7 @@ describe('mocha-5', function () {
 	});
 
 	it('attachExpressionSource attaches code to location object', () => {
-		var parseResult = parseFixture('fixture.js', 'after', {source: true});
+		const parseResult = parseFixture('fixture.js', 'after', {source: true});
 
 		assert.deepEqual(metadata(parseResult), {
 			strings: ['b', 'foo'],
@@ -139,5 +139,35 @@ describe('mocha-5', function () {
 				}
 			}]
 		});
+	});
+
+	it('options.nodes', () => {
+		const data = metadata(parseFixture('fixture.js', 'after', {nodes: true}));
+		const strings = data.strings;
+		const expressions = data.expressions;
+
+		assert.strictEqual(strings.length, 2);
+		assert.strictEqual(strings[0].type, 'Literal');
+		assert.strictEqual(strings[0].value, 'b');
+		assert.strictEqual(strings[1].type, 'Literal');
+		assert.strictEqual(strings[1].value, 'foo');
+
+		assert.strictEqual(expressions.length, 1);
+		assert.strictEqual(expressions[0].type, 'BinaryExpression');
+		assert.strictEqual(expressions[0].code, undefined);
+		assert.strictEqual(expressions[0].operator, '+');
+		assert.strictEqual(expressions[0].left.type, 'Literal');
+		assert.strictEqual(expressions[0].left.value, 'foo');
+		assert.strictEqual(expressions[0].right.type, 'Literal');
+		assert.strictEqual(expressions[0].right.value, 'bar');
+	});
+
+	it('options.nodes', () => {
+		const data = metadata(parseFixture('fixture.js', 'after', {nodes: true, source:true}));
+		const expressions = data.expressions;
+
+		assert.strictEqual(expressions.length, 1);
+		assert.strictEqual(expressions[0].type, 'BinaryExpression');
+		assert.strictEqual(expressions[0].code, `'foo' + 'bar'`);
 	});
 });

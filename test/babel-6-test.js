@@ -148,4 +148,38 @@ describe('babel-6', function () {
 			}]
 		});
 	});
+
+	it('options.nodes', () => {
+		const data = metadata(parseFixture('fixture.js', {
+			plugins: [[detective, {nodes: true}]]
+		}));
+		const strings = data.strings;
+		const expressions = data.expressions;
+
+		assert.strictEqual(strings.length, 2);
+		assert.strictEqual(strings[0].type, 'StringLiteral');
+		assert.strictEqual(strings[0].value, 'b');
+		assert.strictEqual(strings[1].type, 'StringLiteral');
+		assert.strictEqual(strings[1].value, 'foo');
+
+		assert.strictEqual(expressions.length, 1);
+		assert.strictEqual(expressions[0].type, 'BinaryExpression');
+		assert.strictEqual(expressions[0].code, undefined);
+		assert.strictEqual(expressions[0].operator, '+');
+		assert.strictEqual(expressions[0].left.type, 'StringLiteral');
+		assert.strictEqual(expressions[0].left.value, 'foo');
+		assert.strictEqual(expressions[0].right.type, 'StringLiteral');
+		assert.strictEqual(expressions[0].right.value, 'bar');
+	});
+
+	it('attach source to nodes', () => {
+		const data = metadata(parseFixture('fixture.js', {
+			plugins: [[detective, {nodes: true, source: true}]]
+		}));
+		const expressions = data.expressions;
+
+		assert.strictEqual(expressions.length, 1);
+		assert.strictEqual(expressions[0].type, 'BinaryExpression');
+		assert.strictEqual(expressions[0].code, `'foo' + 'bar'`);
+	});
 });

@@ -133,9 +133,28 @@ Attach the actual expression code to each member of `requires.expressions`.
  ]
 ```
 
+### options.nodes
+
+Type: `boolean`
+Default: `false`
+
+Return the actual nodes instead of extracting strings.
+
+```js
+ strings : [{type: 'StringLiteral', value: 'foo', ... }],
+ expressions: [
+   {type: 'BinaryExpression', ...}
+ ]
+```
+
+Everything in `strings` will be a `Literal` (*Babel 5*), or `StringLiteral` (*Babel 6*). The path required will be
+on `node.value`.
+
+The `expressions` array can contain any valid `Expression` node.
+
 ## Related
 
-- [`node-detective`](https://github.com/substack/node-detective) Inspiration for this module. Used by browserify
+- [`node-detective`](https://github.com/substack/node-detective) Inspiration for this module. Used by `browserify`
   to analyze module dependencies.
 
 ## License

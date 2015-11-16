@@ -29,7 +29,7 @@ function detective(babel) {
 
 function visitImportDeclaration(path, opts, file) {
 	if (includeImports(opts)) {
-		addString(file, path.node.source.value);
+		addString(file, opts, path.node.source);
 	}
 }
 
@@ -42,9 +42,9 @@ function visitCallExpression(path, opts, file) {
 		var arg = path.get('arguments.0');
 		if (arg && (!arg.isGenerated() || includeGenerated(opts))) {
 			if (arg.isLiteral()) {
-				addString(file, arg.node.value);
+				addString(file, opts, arg.node);
 			}	else {
-				var loc = addExpression(file, arg.node);
+				var loc = addExpression(file, opts, arg.node);
 				if (attachExpressionSource(opts)) {
 					loc.code = file.code.slice(loc.start, loc.end);
 				}
@@ -62,24 +62,30 @@ function requireMetadata(file) {
 	return metadata.requires || (metadata.requires = {strings: [], expressions: []});
 }
 
-function addExpression(state, node) {
-	var loc = {start: node.start, end: node.end};
-	if (node.loc) {
-		loc.loc = {
-			start: copyLoc(node.loc.start),
-			end: copyLoc(node.loc.end)
-		};
+function addExpression(state, opts, node) {
+	var val;
+	if (attachNodes(opts)) {
+		val = node;
+	} else {
+		val = {start: node.start, end: node.end};
+		if (node.loc) {
+			val.loc = {
+				start: copyLoc(node.loc.start),
+				end: copyLoc(node.loc.end)
+			};
+		}
 	}
-	requireMetadata(state).expressions.push(loc);
-	return loc;
+	requireMetadata(state).expressions.push(val);
+	return val;
 }
 
 function copyLoc(loc) {
 	return loc && {line: loc.line, column: loc.column};
 }
 
-function addString(state, string) {
-	requireMetadata(state).strings.push(string);
+function addString(state, opts, node) {
+	var val = attachNodes(opts) ? node : node.value;
+	requireMetadata(state).strings.push(val);
 }
 
 // OPTION EXTRACTION:
@@ -102,4 +108,8 @@ function includeRequire(opts) {
 
 function attachExpressionSource(opts) {
 	return Boolean(opts && opts.source);
+}
+
+function attachNodes(opts) {
+	return Boolean(opts && opts.nodes);
 }
