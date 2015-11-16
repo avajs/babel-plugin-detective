@@ -163,7 +163,7 @@ describe('mocha-5', function () {
 	});
 
 	it('options.nodes', () => {
-		const data = metadata(parseFixture('fixture.js', 'after', {nodes: true, source:true}));
+		const data = metadata(parseFixture('fixture.js', 'after', {nodes: true, source: true}));
 		const expressions = data.expressions;
 
 		assert.strictEqual(expressions.length, 1);
