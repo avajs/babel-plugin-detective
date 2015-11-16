@@ -21,7 +21,7 @@ const options = {};
 
 // Babel 5
 // `position` can be 'before' or 'after'
-var result = babel.transformFileSync(path, {
+let result = babel.transformFileSync(path, {
   plugins: [{transformer: detective, position: position}],
   extra: {
       detective: options
@@ -29,13 +29,13 @@ var result = babel.transformFileSync(path, {
 });
 
 // Babel 6
-var result = babel.transformFileAsync('/path/to/file', {
+result = babel.transformFileAsync('/path/to/file', {
   plugins:[['detective', options]]
 });
                             
 // metadata will be stored on `result.metadata.requires`
 // a convenience method is provided to extract it.
-var metadata = detective.metadata(result);
+const metadata = detective.metadata(result);
 
 console.log(metadata);
 // {
