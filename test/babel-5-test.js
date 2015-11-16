@@ -102,7 +102,7 @@ describe('mocha-5', function () {
 	});
 
 	it('imports can be excluded', () => {
-		var parseResult = parseFixture('fixture.js', 'before', {includeImport: false});
+		var parseResult = parseFixture('fixture.js', 'before', {import: false});
 		assert.deepEqual(metadata(parseResult, true), {
 			strings: ['foo'],
 			expressions: [`'foo' + 'bar'`]
@@ -110,7 +110,7 @@ describe('mocha-5', function () {
 	});
 
 	it('require statements can be excluded', () => {
-		var parseResult = parseFixture('fixture.js', 'before', {includeRequire: false});
+		var parseResult = parseFixture('fixture.js', 'before', {require: false});
 
 		assert.deepEqual(metadata(parseResult), {
 			strings: ['b'],
@@ -119,7 +119,7 @@ describe('mocha-5', function () {
 	});
 
 	it('attachExpressionSource attaches code to location object', () => {
-		var parseResult = parseFixture('fixture.js', 'after', {attachExpressionSource: true});
+		var parseResult = parseFixture('fixture.js', 'after', {source: true});
 
 		assert.deepEqual(metadata(parseResult), {
 			strings: ['b', 'foo'],

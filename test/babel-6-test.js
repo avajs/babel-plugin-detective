@@ -66,7 +66,7 @@ describe('babel-6', function () {
 	it('including generated will cause duplicate results (one from the import, one from the generated require)', () => {
 		var parseResult = parseFixture('fixture.js', {
 			presets: ['es2015'],
-			plugins: [[detective, {includeGenerated: true}]]
+			plugins: [[detective, {generated: true}]]
 		});
 		assert.deepEqual(metadata(parseResult), {
 			strings: ['b', 'foo', 'b'],
@@ -105,7 +105,7 @@ describe('babel-6', function () {
 	it('import statements can be excluded', () => {
 		var parseResult = parseFixture('fixture.js', {
 			presets: ['es2015'],
-			plugins: [[detective, {includeImport: false}]]
+			plugins: [[detective, {import: false}]]
 		});
 		assert.deepEqual(metadata(parseResult, true), {
 			strings: ['foo'],
@@ -115,7 +115,7 @@ describe('babel-6', function () {
 
 	it('require statements can be excluded', () => {
 		var parseResult = parseFixture('fixture.js', {
-			plugins: [[detective, {includeRequire: false}]]
+			plugins: [[detective, {require: false}]]
 		});
 
 		assert.deepEqual(metadata(parseResult), {
@@ -126,7 +126,7 @@ describe('babel-6', function () {
 
 	it('attachExpressionSource attaches code to location object', () => {
 		var parseResult = parseFixture('fixture.js', {
-			plugins: [[detective, {attachExpressionSource: true}]]
+			plugins: [[detective, {source: true}]]
 		});
 
 		assert.deepEqual(metadata(parseResult), {

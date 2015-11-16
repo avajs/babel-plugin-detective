@@ -87,17 +87,17 @@ function word(opts) {
 }
 
 function includeGenerated(opts) {
-	return Boolean(opts && opts.includeGenerated);
+	return Boolean(opts && opts.generated);
 }
 
 function includeImports(opts) {
-	return (!opts || opts.includeImport) !== false;
+	return (!opts || opts.import) !== false;
 }
 
 function includeRequire(opts) {
-	return (!opts || opts.includeRequire) !== false;
+	return (!opts || opts.require) !== false;
 }
 
 function attachExpressionSource(opts) {
-	return Boolean(opts && opts.attachExpressionSource);
+	return Boolean(opts && opts.source);
 }
