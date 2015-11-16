@@ -18,7 +18,8 @@ function parseFixture(fixtureFile, position, opts) {
 }
 
 it('produces a list of expressions', () => {
-	assert.deepEqual(metadata(parseFixture('fixture.js')), {
+	var parseResult = parseFixture('fixture.js');
+	assert.deepEqual(metadata(parseResult), {
 		strings: ['b', 'foo'],
 		expressions: [{
 			start: 60,
@@ -35,35 +36,65 @@ it('produces a list of expressions', () => {
 			}
 		}]
 	});
+	assert.deepEqual(metadata(parseResult, true), {
+		strings: ['b', 'foo'],
+		expressions: [`'foo' + 'bar'`]
+	});
 });
 
-it('works before transform', () => {
+it('before builtin plugins', () => {
 	var parseResult = parseFixture('fixture.js', 'before');
+	assert.deepEqual(metadata(parseResult), {
+		strings: ['b', 'foo'],
+		expressions: [{
+			start: 60,
+			end: 73,
+			loc: {
+				start: {
+					line: 7,
+					column: 8
+				},
+				end: {
+					line: 7,
+					column: 21
+				}
+			}
+		}]
+	});
 	assert.deepEqual(metadata(parseResult, true), {
 		strings: ['b', 'foo'],
 		expressions: [`'foo' + 'bar'`]
 	});
 });
 
-it('works after transform', () => {
+it('after builtin plugins', () => {
 	var parseResult = parseFixture('fixture.js', 'after');
+	assert.deepEqual(metadata(parseResult), {
+		strings: ['b', 'foo'],
+		expressions: [{
+			start: 60,
+			end: 73,
+			loc: {
+				start: {
+					line: 7,
+					column: 8
+				},
+				end: {
+					line: 7,
+					column: 21
+				}
+			}
+		}]
+	});
 	assert.deepEqual(metadata(parseResult, true), {
 		strings: ['b', 'foo'],
 		expressions: [`'foo' + 'bar'`]
 	});
 });
-           /*
-it('including generated will cause duplicate results', () => {
-	var parseResult = parseFixture('fixture.js', 'before', {includeGenerated: true});
-	assert.deepEqual(metadata(parseResult, true), {
-		strings: ['b', 'foo'],
-		expressions: [`'foo' + 'bar'`]
-	});
-});          */
 
 it('alternate word', () => {
 	var parseResult = parseFixture('fixture.js', 'before', {word: '__dereq__'});
-	assert.deepEqual(metadata(parseResult, true), {
+	assert.deepEqual(metadata(parseResult), {
 		strings: ['b', 'baz'],
 		expressions: []
 	});
@@ -77,7 +108,16 @@ it('imports can be excluded', () => {
 	});
 });
 
-it('attachExpressionSource option will automatically attach expression source', () => {
+it('require statements can be excluded', () => {
+	var parseResult = parseFixture('fixture.js', 'before', {includeRequire: false});
+
+	assert.deepEqual(metadata(parseResult), {
+		strings: ['b'],
+		expressions: []
+	});
+});
+
+it('attachExpressionSource attaches code to location object', () => {
 	var parseResult = parseFixture('fixture.js', 'after', {attachExpressionSource: true});
 
 	assert.deepEqual(metadata(parseResult), {
@@ -99,13 +139,3 @@ it('attachExpressionSource option will automatically attach expression source', 
 		}]
 	});
 });
-
-it('includeRequire', () => {
-	var parseResult = parseFixture('fixture.js', 'before', {includeRequire: false});
-
-	assert.deepEqual(metadata(parseResult), {
-		strings: ['b'],
-		expressions: []
-	});
-});
-
