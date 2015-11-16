@@ -4,6 +4,7 @@ module.exports.metadata = extractMetadataFromResult;
 
 function detective(babel) {
 	if (babel.Plugin) {
+		// Babel 5
 		return new babel.Plugin('detective', {visitor: {
 			ImportDeclaration: function (a, b, c, file) {
 				return visitImportDeclaration(this, file.opts.extra.detective, file);
@@ -13,6 +14,7 @@ function detective(babel) {
 			}
 		}});
 	}
+	// Babel 6
 	return {
 		visitor: {
 			ImportDeclaration: function (path, state) {
