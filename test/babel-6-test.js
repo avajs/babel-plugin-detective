@@ -1,18 +1,9 @@
 /* eslint-env node, mocha */
 
 import assert from 'assert';
-const babel = require('babel-core/index');
+const babel = require('babel-core');
 import detective from '../';
-import path from 'path';
-import fs from 'fs';
-
-function getFixturePath(fixtureFile) {
-	return path.resolve(__dirname, 'fixtures', fixtureFile);
-}
-
-function getFixtureContents(fixtureFile) {
-	return fs.readFileSync(getFixturePath(fixtureFile), 'utf8');
-}
+import {getFixturePath, metadata} from './_utils';
 
 function parseFixture(fixtureFile, opts) {
 	opts = opts || {};
@@ -24,19 +15,6 @@ function parseFixture(fixtureFile, opts) {
 	};
 
 	return babel.transformFileSync(getFixturePath(fixtureFile), babelOpts);
-}
-
-function replaceExpressions(metadata, file) {
-	const contents = getFixtureContents(file);
-	metadata.expressions = metadata.expressions.map(loc => contents.slice(loc.start, loc.end));
-}
-
-function metadata(parseResult, replaceExp) {
-	const metadata = detective.metadata(parseResult);
-	if (replaceExp) {
-		replaceExpressions(metadata, parseResult.options.filename);
-	}
-	return metadata;
 }
 
 it('produces a list of expressions', () => {

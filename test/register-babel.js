@@ -3,5 +3,5 @@ require('babel-core/register')({
 		'stage-3',
 		'es2015'
 	],
-	only: ['test.js']
+	only: ['_utils.js', '*-test.js']
 });

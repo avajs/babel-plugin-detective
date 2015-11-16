@@ -2,35 +2,49 @@
 module.exports = detective;
 module.exports.metadata = extractMetadataFromResult;
 
-function detective() {
+function detective(babel) {
+	if (babel.Plugin) {
+		return new babel.Plugin('detective', {visitor: {
+			ImportDeclaration: function (a, b, c, file) {
+				return visitImportDeclaration(this, file.opts.extra.detective, file);
+			},
+			CallExpression: function (a, b, c, file) {
+				return visitCallExpression(this, file.opts.extra.detective, file);
+			}
+		}});
+	}
 	return {
 		visitor: {
-			ImportDeclaration: visitImportDeclaration,
-			CallExpression: visitCallExpression
+			ImportDeclaration: function (path, state) {
+				return visitImportDeclaration(path, state.opts, state.file);
+			},
+			CallExpression: function (path, state) {
+				return visitCallExpression(path, state.opts, state.file);
+			}
 		}
 	};
 }
 
-function visitImportDeclaration(path, state) {
-	if (includeImports(state)) {
-		addString(state, path.node.source.value);
+function visitImportDeclaration(path, opts, file) {
+	if (includeImports(opts)) {
+		addString(file, path.node.source.value);
 	}
 }
 
-function visitCallExpression(path, state) {
-	if (!includeRequire(state)) {
+function visitCallExpression(path, opts, file) {
+	if (!includeRequire(opts)) {
 		return;
 	}
 	var callee = path.get('callee');
-	if (callee.isIdentifier() && callee.node.name === word(state)) {
+	if (callee.isIdentifier() && callee.node.name === word(opts)) {
 		var arg = path.get('arguments.0');
-		if (arg && (!arg.isGenerated() || includeGenerated(state))) {
+		if (arg && (!arg.isGenerated() || includeGenerated(opts))) {
 			if (arg.isLiteral()) {
-				addString(state, arg.node.value);
+				addString(file, arg.node.value);
 			}	else {
-				var loc = addExpression(state, arg.node);
-				if (attachExpressionSource(state)) {
-					loc.code = state.file.code.slice(loc.start, loc.end);
+				var loc = addExpression(file, arg.node);
+				if (attachExpressionSource(opts)) {
+					loc.code = file.code.slice(loc.start, loc.end);
 				}
 			}
 		}
@@ -41,8 +55,8 @@ function extractMetadataFromResult(result) {
 	return result.metadata.requires;
 }
 
-function requireMetadata(state) {
-	var metadata = state.file.metadata;
+function requireMetadata(file) {
+	var metadata = file.metadata;
 	return metadata.requires || (metadata.requires = {strings: [], expressions: []});
 }
 
@@ -68,22 +82,22 @@ function addString(state, string) {
 
 // OPTION EXTRACTION:
 
-function word(state) {
-	return state.opts.word || 'require';
+function word(opts) {
+	return (opts && opts.word) || 'require';
 }
 
-function includeGenerated(state) {
-	return Boolean(state.opts.includeGenerated);
+function includeGenerated(opts) {
+	return Boolean(opts && opts.includeGenerated);
 }
 
-function includeImports(state) {
-	return state.opts.includeImport !== false;
+function includeImports(opts) {
+	return (!opts || opts.includeImport) !== false;
 }
 
-function includeRequire(state) {
-	return state.opts.includeRequire !== false;
+function includeRequire(opts) {
+	return (!opts || opts.includeRequire) !== false;
 }
 
-function attachExpressionSource(state) {
-	return Boolean(state.opts.attachExpressionSource);
+function attachExpressionSource(opts) {
+	return Boolean(opts && opts.attachExpressionSource);
 }
