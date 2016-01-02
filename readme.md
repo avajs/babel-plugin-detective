@@ -152,6 +152,56 @@ on `node.value`.
 
 The `expressions` array can contain any valid `Expression` node.
 
+## Manipulating Require Statements
+
+*Warning: Exploratory Support Only*: The documentation here is intentionally sparse. While every attempt will be made to avoid breaking changes, it is a new feature so changes are a real possibility. You should look at the source of `index.js` and the test suite for a better idea on how to use this.
+
+`babel-detective/wrap-listener` allows you to create your own plugin that can manipulate exports.
+
+The following creates a plugin that upper-cases all require and import statements:
+
+```js
+var wrapListener = require('babel-detective/wrap-listener');
+
+module.exports = wrapListener(listener, 'uppercase');
+
+function listener(path, file, opts) {
+  if (path.isLiteral()) {
+    path.node.value = path.node.value.toUpperCase();
+  }
+}
+```
+
+### wrapListener(listener, name, options)
+
+#### listener
+
+Type: `callback(nodePath, file, opts)`  
+*Required*
+
+A listener that performs the actual manipulation. It is called with:
+
+ - `nodePath`: The actual node in question can be accessed via `nodePath.node`. `nodePath` has other properties (`parent`, `isLiteral()`, etc.). A full description of that API is out of scope for this document.
+ 
+ - `file`: The Babel file metadata object. This is what the main module uses to store metadata for required modules that it finds.
+ 
+ - `opts`: The options that were passed to the plugin. This is done via the array syntax in Babel 6, or `options.extra[name]` in Babel 5.
+ 
+
+#### name
+
+Type: `string`  
+*Required*
+
+This is the key used to locate `opts` in Babel 5 `opitons.extra[name]`.
+
+#### options
+
+*Optional*
+
+Accepts the `import`, `require`, and `generated` options as described above.
+
+
 ## Related
 
 - [`node-detective`](https://github.com/substack/node-detective) Inspiration for this module. Used by `browserify`
