@@ -1,7 +1,18 @@
 'use strict';
+
+function isBabel5(babel) {
+	if (!babel.Plugin) {
+		return false;
+	}
+	if (!babel.version) {
+		return true;
+	}
+	return /^5\./.test(babel.version);
+}
+
 module.exports = function (listener, name, options) {
 	return function detective(babel) {
-		if (babel.Plugin) {
+		if (isBabel5(babel)) {
 			// Babel 5
 			return new babel.Plugin('detective', {visitor: {
 				ImportDeclaration: function (a, b, c, file) {

@@ -17,7 +17,7 @@ function parseFixture(fixtureFile, position, opts) {
 	return result;
 }
 
-describe('mocha-5', function () {
+describe('babel-5', function () {
 	it('produces a list of expressions', () => {
 		const parseResult = parseFixture('fixture.js');
 		assert.deepEqual(metadata(parseResult), {
