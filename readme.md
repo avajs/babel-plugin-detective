@@ -1,4 +1,4 @@
-# babel-detective [![Build Status](https://travis-ci.org/jamestalmage/babel-plugin-detective.svg?branch=master)](https://travis-ci.org/jamestalmage/babel-plugin-detective) [![Coverage Status](https://coveralls.io/repos/jamestalmage/babel-plugin-detective/badge.svg?branch=master&service=github)](https://coveralls.io/github/jamestalmage/babel-plugin-detective?branch=master)
+# babel-detective [![Build Status](https://travis-ci.org/avajs/babel-plugin-detective.svg?branch=master)](https://travis-ci.org/avajs/babel-plugin-detective) [![Coverage Status](https://coveralls.io/repos/avajs/babel-plugin-detective/badge.svg?branch=master&service=github)](https://coveralls.io/avajs/babel-plugin-detective?branch=master)
 
 > A Babel 5/6 plugin that scans the AST for require calls and import statements
 
