@@ -4,9 +4,11 @@ function isBabel5(babel) {
 	if (!babel.Plugin) {
 		return false;
 	}
+
 	if (!babel.version) {
 		return true;
 	}
+
 	return /^5\./.test(babel.version);
 }
 
@@ -46,16 +48,19 @@ module.exports = function (listener, name, options) {
 		if (!includeRequire(opts)) {
 			return;
 		}
+
 		var callee = path.get('callee');
+
 		if (callee.isIdentifier() && callee.node.name === word(opts)) {
 			var arg = path.get('arguments.0');
+
 			if (arg && (!arg.isGenerated() || includeGenerated(opts))) {
 				listener(arg, file, opts);
 			}
 		}
 	}
 
-// OPTION EXTRACTION:
+	// OPTION EXTRACTION:
 
 	function word(opts) {
 		opts = options || opts;

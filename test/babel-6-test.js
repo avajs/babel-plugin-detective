@@ -1,5 +1,4 @@
 /* eslint-env node, mocha */
-
 import assert from 'assert';
 const babel = require('babel-core');
 import detective from '../';

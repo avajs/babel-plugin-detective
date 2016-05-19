@@ -12,6 +12,7 @@ function addString(node, file, opts) {
 
 function addExpression(node, file, opts) {
 	var val;
+
 	if (attachNodes(opts)) {
 		val = node;
 	} else {
@@ -21,10 +22,13 @@ function addExpression(node, file, opts) {
 			end: copyLoc(node.loc.end)
 		};
 	}
+
 	if (attachExpressionSource(opts)) {
 		val.code = file.code.slice(val.start, val.end);
 	}
+
 	requireMetadata(file).expressions.push(val);
+
 	return val;
 }
 
@@ -34,6 +38,7 @@ function copyLoc(loc) {
 
 function requireMetadata(file) {
 	var metadata = file.metadata;
+
 	return metadata.requires || (metadata.requires = {strings: [], expressions: []});
 }
 

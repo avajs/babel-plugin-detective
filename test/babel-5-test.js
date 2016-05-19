@@ -1,7 +1,6 @@
 /* eslint-env node, mocha */
-
 import assert from 'assert';
-const babel = require('babel');
+const babel = require('babel-core');
 import detective from '../';
 import {getFixturePath, metadata} from './_utils';
 
@@ -13,7 +12,9 @@ function parseFixture(fixtureFile, position, opts) {
 			detective: opts || {}
 		}
 	});
+
 	result.options = {filename: path};
+
 	return result;
 }
 
