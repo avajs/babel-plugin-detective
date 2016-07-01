@@ -171,4 +171,10 @@ describe('babel-5', function () {
 		assert.strictEqual(expressions[0].type, 'BinaryExpression');
 		assert.strictEqual(expressions[0].code, `'foo' + 'bar'`);
 	});
+
+	it('handles exports', () => {
+		const {strings} = metadata(parseFixture('exports.js', 'after'));
+
+		assert.deepEqual(strings, ['./foo', './quz', './goodbye']);
+	});
 });

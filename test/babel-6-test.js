@@ -181,4 +181,12 @@ describe('babel-6', function () {
 		assert.strictEqual(expressions[0].type, 'BinaryExpression');
 		assert.strictEqual(expressions[0].code, `'foo' + 'bar'`);
 	});
+
+	it('handles exports', () => {
+		const {strings} = metadata(parseFixture('exports.js', {
+			presets: ['es2015']
+		}));
+
+		assert.deepEqual(strings, ['./foo', './quz', './goodbye']);
+	});
 });
