@@ -39,7 +39,14 @@ function copyLoc(loc) {
 function requireMetadata(file) {
 	var metadata = file.metadata;
 
-	return metadata.requires || (metadata.requires = {strings: [], expressions: []});
+	if (!metadata.requires) {
+		metadata.requires = {
+			strings: [],
+			expressions: []
+		};
+	}
+
+	return metadata.requires;
 }
 
 // OPTION EXTRACTION:
