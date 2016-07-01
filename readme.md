@@ -102,6 +102,19 @@ Default: `true`
 
 Include ES2015 imports in the metadata. All ES2015 imports will be of type `string`.
 
+### options.export
+
+Type: `boolean`<br>
+Default: `true`
+
+Include ES2015 re-exports in the metadata. All ES2015 re-exports will be of type `string`.
+
+```js
+export * from './foo';
+export {bar as baz} from './quz';
+export {hello} from './goodbye';
+```
+
 ### options.require
 
 Type: `boolean`<br>

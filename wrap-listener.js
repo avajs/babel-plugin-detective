@@ -33,10 +33,22 @@ module.exports = function (listener, name, options) {
 				},
 				CallExpression: function (path, state) {
 					return visitCallExpression(path, state.file, state.opts);
+				},
+				ExportNamedDeclaration: function (path, state) {
+					return visitExportDeclaration(path, state.file, state.opts);
+				},
+				ExportAllDeclaration: function (path, state) {
+					return visitExportDeclaration(path, state.file, state.opts);
 				}
 			}
 		};
 	};
+
+	function visitExportDeclaration(path, file, opts) {
+		if (includeExports(opts) && path.get('source').node) {
+			listener(path.get('source'), file, opts);
+		}
+	}
 
 	function visitImportDeclaration(path, file, opts) {
 		if (includeImports(opts)) {
@@ -75,6 +87,11 @@ module.exports = function (listener, name, options) {
 	function includeImports(opts) {
 		opts = options || opts;
 		return (!opts || opts.import) !== false;
+	}
+
+	function includeExports(opts) {
+		opts = options || opts;
+		return (!opts || opts.export) !== false;
 	}
 
 	function includeRequire(opts) {
