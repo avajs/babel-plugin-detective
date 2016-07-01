@@ -1,6 +1,6 @@
 /* eslint-env node, mocha */
 import assert from 'assert';
-const babel = require('babel-core');
+import * as babel from 'babel-core';
 import detective from '../';
 import {getFixturePath, metadata} from './_utils';
 
